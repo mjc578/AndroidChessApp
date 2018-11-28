@@ -270,4 +270,15 @@ public abstract class Pieces{
 		return true;
 	}
 
+	public void makeRandomMove(Board board) {
+		for(int m = 0; m < 8; m++){
+			for(int n = 0; n < 8; n++){
+				Position p = new Position(Position.toChar(m), n);
+				if(this.move(p, board)){
+					return;
+				}
+			}
+		}
+	}
+
 }
