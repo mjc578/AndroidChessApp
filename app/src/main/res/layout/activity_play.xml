@@ -5,19 +5,67 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PlayActivity">
-    
+
     <GridView
         android:id="@+id/board"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:numColumns="8"
-        android:gravity="center_horizontal">
+        android:layout_width="360dp"
+        android:layout_height="360dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="11dp"
+        android:layout_marginBottom="138dp"
+        android:gravity="center_horizontal"
+        android:numColumns="8">
 
     </GridView>
 
     <Button
         android:id="@+id/undo_button"
+        android:layout_width="135dp"
+        android:layout_height="36dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="418dp"
+        android:text="Undo" />
+
+    <Button
+        android:id="@+id/random_move_button"
+        android:layout_width="135dp"
+        android:layout_height="36dp"
+        android:layout_alignTop="@+id/undo_button"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="47dp"
+        android:text="Random Move" />
+
+    <Button
+        android:id="@+id/draw_button"
+        android:layout_width="135dp"
+        android:layout_height="36dp"
+        android:layout_alignTop="@+id/undo_button"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="-1dp"
+        android:layout_marginEnd="33dp"
+        android:text="Draw" />
+
+    <Button
+        android:id="@+id/resign_button"
+        android:layout_width="135dp"
+        android:layout_height="36dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="215dp"
+        android:layout_marginBottom="9dp"
+        android:text="Resign" />
+
+    <TextView
+        android:id="@+id/whosMove"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="104dp"
+        android:text="White Player's Move" />
 
 </RelativeLayout>
