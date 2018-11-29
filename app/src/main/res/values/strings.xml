@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">ChessApp03</string>
     <string name="play_game">Play Game</string>
+    <string name="num_moves">Moves</string>
 </resources>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/archive_entry"
+    android:layout_width="match_parent"
+    android:layout_height="88dp"
+    android:background="#eeeeee"
+    android:minHeight="88dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/archive_name_move_number"
+        android:layout_width="256dp"
+        android:layout_height="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/archive_name"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:gravity="bottom"
+            android:paddingBottom="4dp"
+            tools:text="placeholder_archive_name" />
+
+        <TextView
+            android:id="@+id/archive_move_number"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_below="@id/archive_name"
+            android:gravity="top"
+            android:paddingTop="4dp"
+            tools:text="placeholder_number_of_moves" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/archive_entry_date"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/archive_name_move_number"
+        android:gravity="bottom|center"
+        android:paddingBottom="4dp"
+        tools:text="11/29/18" />
+
+</RelativeLayout>
