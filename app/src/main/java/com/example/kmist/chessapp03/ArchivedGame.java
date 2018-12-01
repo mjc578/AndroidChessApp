@@ -29,6 +29,8 @@ public class ArchivedGame implements Serializable {
         return savedMoves.size()/2;
     }
 
-
+    public ArrayList<String> getSavedMoves(){
+        return savedMoves;
+    }
 
 }

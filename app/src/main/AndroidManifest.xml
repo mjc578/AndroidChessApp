@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".PlayActivity" />
-        <activity android:name=".ArchiveActivity"></activity>
+        <activity android:name=".ArchiveActivity" />
+        <activity android:name=".ReplayActivity"></activity>
     </application>
 
 </manifest>

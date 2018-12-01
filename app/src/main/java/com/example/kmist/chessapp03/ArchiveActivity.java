@@ -18,6 +18,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+
 public class ArchiveActivity extends AppCompatActivity implements Serializable {
 
     private String filename = "games.dat";
@@ -49,6 +50,15 @@ public class ArchiveActivity extends AppCompatActivity implements Serializable {
 
         if(archivedGames == null){
             archiveList.setVisibility(View.GONE);
+            /*
+            archivedGames = new ArrayList<>();
+            archivedGames.add(new ArchivedGame("TGSOE", Calendar.getInstance().getTime(), new ArrayList<String>()));
+            archivedGames.add(new ArchivedGame("EOGES", Calendar.getInstance().getTime(), new ArrayList<String>()));
+            archivedGames.add(new ArchivedGame("bripers", Calendar.getInstance().getTime(), new ArrayList<String>()));
+            archivedGames.add(new ArchivedGame("peppers", Calendar.getInstance().getTime(), new ArrayList<String>()));
+            archivedGames.add(new ArchivedGame("TEgla", Calendar.getInstance().getTime(), new ArrayList<String>()));
+            saveGames();
+            */
         }
         else{
             archiveAdapter = new ArchiveListAdapter(this, archivedGames);
@@ -72,11 +82,7 @@ public class ArchiveActivity extends AppCompatActivity implements Serializable {
     private void setListListener(){
         archiveList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(view.findViewById(R.id.selected_archive_view).getVisibility() == View.VISIBLE){
-                   view.findViewById(R.id.selected_archive_view).setVisibility(View.GONE);
-                   view.findViewById(R.id.collapsed_archive_view).setVisibility(View.VISIBLE);
-                   return;
-                }
+
                 for(int i = 0; i < archiveList.getCount(); i++){
                     View v = archiveList.getChildAt(i);
                     v.findViewById(R.id.selected_archive_view).setVisibility(View.GONE);
@@ -87,6 +93,7 @@ public class ArchiveActivity extends AppCompatActivity implements Serializable {
                     view.findViewById(R.id.selected_archive_view).setVisibility(View.VISIBLE);
 
                     setDeleteListener(view, position);
+                    setPlayListener(view, position);
                 }
                 else{
                     view.findViewById(R.id.collapsed_archive_view).setVisibility(View.VISIBLE);
@@ -125,7 +132,16 @@ public class ArchiveActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    private void setPlayListener(View v, int position){
-
+    private void setPlayListener(View v, final int position){
+        TextView ptv = (TextView) v.findViewById(R.id.selected_archive_play);
+        ptv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ArchiveActivity.this, ReplayActivity.class);
+                i.putExtra("archived_game_name", archivedGames.get(position).getName());
+                i.putExtra("archived_game_moves", archivedGames.get(position).getSavedMoves());
+                startActivity(i);
+            }
+        });
     }
 }
