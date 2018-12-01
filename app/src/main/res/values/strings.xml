@@ -3,4 +3,6 @@
     <string name="play_game">Play Game</string>
     <string name="num_moves">Moves</string>
     <string name="no_games">No Archived Games</string>
+    <string name="delete_selected">DELETE</string>
+    <string name="play_selected">PLAY</string>
 </resources>

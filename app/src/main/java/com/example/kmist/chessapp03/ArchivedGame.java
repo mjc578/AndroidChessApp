@@ -1,13 +1,13 @@
 package com.example.kmist.chessapp03;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class ArchivedGame implements Serializable {
 
     private String name;
-    //TODO: fix this date thing, should be date but get date must return a string for text view
     private Date date;
     private ArrayList<String> savedMoves;
 
@@ -22,7 +22,7 @@ public class ArchivedGame implements Serializable {
     }
 
     public String getDate(){
-        return date.toString();
+        return new SimpleDateFormat("M/dd/yy").format(date);
     }
 
     public int getNumMoves(){

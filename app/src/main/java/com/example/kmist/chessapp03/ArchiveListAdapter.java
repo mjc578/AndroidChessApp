@@ -29,15 +29,21 @@ public class ArchiveListAdapter extends ArrayAdapter<ArchivedGame> {
 
         ArchivedGame currentArchive = getItem(position);
 
-        TextView archiveName = (TextView) listItemView.findViewById(R.id.archive_name);
+        TextView archiveName = (TextView) listItemView.findViewById(R.id.collapsed_archive_name);
+        TextView selectedArchive = (TextView) listItemView.findViewById(R.id.selected_archive_name);
         archiveName.setText(currentArchive.getName());
+        selectedArchive.setText(currentArchive.getName());
 
-        TextView projectNumEntries = (TextView) listItemView.findViewById(R.id.archive_move_number);
+        TextView archiveNumMoves = (TextView) listItemView.findViewById(R.id.collapsed_archive_move_number);
+        TextView selectedArchiveMoves = (TextView) listItemView.findViewById(R.id.selected_archive_move_number);
         String numMoves = Integer.toString(currentArchive.getNumMoves()) + " " + getContext().getString(R.string.num_moves);
-        projectNumEntries.setText(numMoves); //0 Recording(s)
+        archiveNumMoves.setText(numMoves); //0 Recording(s)
+        selectedArchiveMoves.setText(numMoves);
 
-        TextView projectDate = (TextView) listItemView.findViewById(R.id.archive_entry_date);
-        projectDate.setText(currentArchive.getDate());
+        TextView archiveDate = (TextView) listItemView.findViewById(R.id.collapsed_archive_entry_date);
+        TextView selectedArchiveDate = (TextView) listItemView.findViewById(R.id.selected_archive_entry_date);
+        archiveDate.setText(currentArchive.getDate());
+        selectedArchiveDate.setText(currentArchive.getDate());
 
         return listItemView;
     }

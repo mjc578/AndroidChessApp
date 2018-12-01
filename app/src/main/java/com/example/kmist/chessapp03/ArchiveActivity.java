@@ -3,77 +3,75 @@ package com.example.kmist.chessapp03;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 public class ArchiveActivity extends AppCompatActivity implements Serializable {
 
-    ArchiveListAdapter archiveAdapter;
-    ArrayList<ArchivedGame> archivedGames;
+    private String filename = "games.dat";
+    private ArchiveListAdapter archiveAdapter;
+    private ArrayList<ArchivedGame> archivedGames;
+    private ListView archiveList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_archive);
 
-        ListView archiveList = (ListView) findViewById(R.id.archive_list_view);
+        archiveList = (ListView) findViewById(R.id.archive_list_view);
         TextView noGames = (TextView) findViewById(R.id.no_games_text_view);
 
-        //load the archive list from the serial file and if it be null, set the list view to say empty otherwise set adapter
+        setListListener();
+
+        FileInputStream fis;
+        ObjectInputStream oin;
+
         try {
-            archivedGames = readApp();
-        } catch (Exception e) {}
+            fis = openFileInput(filename);
+            oin = new ObjectInputStream(fis);
+            archivedGames = (ArrayList<ArchivedGame>) oin.readObject();
+            oin.close();
+        } catch (Exception e){}
 
-        /*
-        Just a test entry for the archive list, testing out the date stuff
-
-        archivedGames = new ArrayList<>();
-        archivedGames.add(new ArchivedGame("The Greatest Show on Earth", Calendar.getInstance().getTime(), new ArrayList<String>()));
-
-        */
         if(archivedGames == null){
             archiveList.setVisibility(View.GONE);
         }
-        else {
+        else{
+            archiveAdapter = new ArchiveListAdapter(this, archivedGames);
             noGames.setVisibility(View.GONE);
-            ArchiveListAdapter listAdapter = new ArchiveListAdapter(this, archivedGames);
-            archiveList.setAdapter(listAdapter);
+            archiveList.setAdapter(archiveAdapter);
         }
     }
 
-    public static final String storeDir = "docs";
-    public static final String storeFile = "games.ser";
+    public void saveGames() {
 
-    public static ArrayList<ArchivedGame> readApp() throws IOException, ClassNotFoundException {
-
-        BufferedReader br = new BufferedReader(new FileReader("docs/games.ser"));
-        if (br.readLine() == null) {
-            br.close();
-            return null;
-        }
-        ObjectInputStream ois = new ObjectInputStream(
-                new FileInputStream(storeDir + File.separator + storeFile));
-        ArrayList<ArchivedGame> archivedGames = (ArrayList<ArchivedGame>) ois.readObject();
-        br.close();
-        ois.close();
-        return archivedGames;
+        FileOutputStream fos;
+        ObjectOutputStream out;
+        try {
+            fos = this.openFileOutput(filename, MODE_PRIVATE);
+            out = new ObjectOutputStream(fos);
+            out.writeObject(archivedGames);
+            out.close();
+        } catch (IOException ex) {}
     }
 
-    public static void writeApp(List<ArchivedGame> archivedGames) throws IOException {
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
-        oos.writeObject(archivedGames);
+    private void setListListener(){
+        archiveList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // When clicked, show a toast with the TextView text
+                view.findViewById(R.id.collapsed_archive_view).setVisibility(View.GONE);
+                view.findViewById(R.id.selected_archive_view).setVisibility(View.VISIBLE);
+            }
+        });
     }
 }

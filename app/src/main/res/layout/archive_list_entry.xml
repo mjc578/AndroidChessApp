@@ -1,47 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/archive_entry"
+    android:id="@+id/archive_entries_container"
     android:layout_width="match_parent"
-    android:layout_height="88dp"
-    android:background="#eeeeee"
-    android:minHeight="88dp"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/archive_name_move_number"
-        android:layout_width="256dp"
-        android:layout_height="match_parent"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:id="@+id/collapsed_archive_view"
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:background="#eeeeee"
+        android:minHeight="88dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/collapsed_archive_name_move_number"
+            android:layout_width="256dp"
+            android:layout_height="match_parent"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/collapsed_archive_name"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:gravity="bottom"
+                android:paddingBottom="4dp"
+                tools:text="placeholder_archive_name" />
+
+            <TextView
+                android:id="@+id/collapsed_archive_move_number"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:layout_below="@id/collapsed_archive_name"
+                android:gravity="top"
+                android:paddingTop="4dp"
+                tools:text="placeholder_number_of_moves" />
+
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/archive_name"
+            android:id="@+id/collapsed_archive_entry_date"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
-            android:gravity="bottom"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/collapsed_archive_name_move_number"
+            android:gravity="bottom|center"
             android:paddingBottom="4dp"
-            tools:text="placeholder_archive_name" />
-
-        <TextView
-            android:id="@+id/archive_move_number"
-            android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:layout_below="@id/archive_name"
-            android:gravity="top"
-            android:paddingTop="4dp"
-            tools:text="placeholder_number_of_moves" />
+            tools:text="11/29/18" />
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/archive_entry_date"
-        android:layout_width="wrap_content"
-        android:layout_height="44dp"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@id/archive_name_move_number"
-        android:gravity="bottom|center"
-        android:paddingBottom="4dp"
-        tools:text="11/29/18" />
+    <RelativeLayout
+        android:id="@+id/selected_archive_view"
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="#eeeeee"
+        android:minHeight="88dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/selected_archive_name_move_number"
+            android:layout_width="256dp"
+            android:layout_height="match_parent"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/selected_archive_name"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:gravity="bottom"
+                android:paddingBottom="4dp"
+                tools:text="placeholder_archive_name" />
+
+            <TextView
+                android:id="@+id/selected_archive_move_number"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:layout_below="@id/selected_archive_name"
+                android:gravity="top"
+                android:paddingTop="4dp"
+                tools:text="placeholder_number_of_moves" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/selected_archive_entry_date"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/selected_archive_name_move_number"
+            android:gravity="bottom|center"
+            android:paddingBottom="4dp"
+            tools:text="11/29/18" />
+
+        <LinearLayout
+            android:id="@+id/selected_archive_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:id="@+id/selected_archive_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/delete_selected"
+                android:layout_marginRight="48dp"
+                android:clickable="true"/>
+
+            <TextView
+                android:id="@+id/selected_archive_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/play_selected"
+                android:layout_marginLeft="48dp"
+                android:clickable="true"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>
