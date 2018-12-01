@@ -1,12 +1,14 @@
 package com.example.kmist.chessapp03;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,6 +24,8 @@ public class ArchiveActivity extends AppCompatActivity implements Serializable {
     private ArchiveListAdapter archiveAdapter;
     private ArrayList<ArchivedGame> archivedGames;
     private ListView archiveList;
+    private TextView deleteText;
+    private TextView playText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +72,60 @@ public class ArchiveActivity extends AppCompatActivity implements Serializable {
     private void setListListener(){
         archiveList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // When clicked, show a toast with the TextView text
-                view.findViewById(R.id.collapsed_archive_view).setVisibility(View.GONE);
-                view.findViewById(R.id.selected_archive_view).setVisibility(View.VISIBLE);
+                if(view.findViewById(R.id.selected_archive_view).getVisibility() == View.VISIBLE){
+                   view.findViewById(R.id.selected_archive_view).setVisibility(View.GONE);
+                   view.findViewById(R.id.collapsed_archive_view).setVisibility(View.VISIBLE);
+                   return;
+                }
+                for(int i = 0; i < archiveList.getCount(); i++){
+                    View v = archiveList.getChildAt(i);
+                    v.findViewById(R.id.selected_archive_view).setVisibility(View.GONE);
+                    v.findViewById(R.id.collapsed_archive_view).setVisibility(View.VISIBLE);
+                }
+                if(view.findViewById(R.id.selected_archive_view).getVisibility() == View.GONE){
+                    view.findViewById(R.id.collapsed_archive_view).setVisibility(View.GONE);
+                    view.findViewById(R.id.selected_archive_view).setVisibility(View.VISIBLE);
+
+                    setDeleteListener(view, position);
+                }
+                else{
+                    view.findViewById(R.id.collapsed_archive_view).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.selected_archive_view).setVisibility(View.GONE);
+                }
             }
         });
+    }
+
+    private void setDeleteListener(View v, final int position){
+        deleteText = (TextView) v.findViewById(R.id.selected_archive_delete);
+        deleteText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                archivedGames.remove(position);
+                                saveGames();
+                                archiveList.setAdapter(archiveAdapter);
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+
+                                break;
+                        }
+                    }
+                };
+                AlertDialog.Builder builder = new AlertDialog.Builder(ArchiveActivity.this);
+                builder.setMessage("Delete this archived game?").setPositiveButton("Yes", dialogListener)
+                        .setNegativeButton("No", dialogListener).show();
+            }
+        });
+
+    }
+
+    private void setPlayListener(View v, int position){
+
     }
 }
