@@ -5,33 +5,44 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+
+import comparators.CompareByDate;
+import comparators.CompareByName;
 
 
-public class ArchiveActivity extends AppCompatActivity implements Serializable {
+public class ArchiveActivity extends AppCompatActivity {
 
     private String filename = "games.dat";
     private ArchiveListAdapter archiveAdapter;
     private ArrayList<ArchivedGame> archivedGames;
     private ListView archiveList;
-    private TextView deleteText;
-    private TextView playText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_archive);
+
+        //make a back button
+        android.support.v7.app.ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
 
         archiveList = (ListView) findViewById(R.id.archive_list_view);
         TextView noGames = (TextView) findViewById(R.id.no_games_text_view);
@@ -50,20 +61,61 @@ public class ArchiveActivity extends AppCompatActivity implements Serializable {
 
         if(archivedGames == null){
             archiveList.setVisibility(View.GONE);
-            /*
+
+            Calendar dr = Calendar.getInstance();
+            dr.set(Calendar.YEAR, 1999);
+            dr.set(Calendar.MONTH, 7);
+            dr.set(Calendar.DAY_OF_MONTH, 26);
+
+            Calendar drr = Calendar.getInstance();
+            drr.set(Calendar.YEAR, 2007);
+            drr.set(Calendar.MONTH, 5);
+            drr.set(Calendar.DAY_OF_MONTH, 13);
+
             archivedGames = new ArrayList<>();
-            archivedGames.add(new ArchivedGame("TGSOE", Calendar.getInstance().getTime(), new ArrayList<String>()));
-            archivedGames.add(new ArchivedGame("EOGES", Calendar.getInstance().getTime(), new ArrayList<String>()));
-            archivedGames.add(new ArchivedGame("bripers", Calendar.getInstance().getTime(), new ArrayList<String>()));
-            archivedGames.add(new ArchivedGame("peppers", Calendar.getInstance().getTime(), new ArrayList<String>()));
-            archivedGames.add(new ArchivedGame("TEgla", Calendar.getInstance().getTime(), new ArrayList<String>()));
+            archivedGames.add(new ArchivedGame("TGSOE", Calendar.getInstance(), new ArrayList<String>()));
+            archivedGames.add(new ArchivedGame("EOGES", Calendar.getInstance(), new ArrayList<String>()));
+            archivedGames.add(new ArchivedGame("bripers", drr, new ArrayList<String>()));
+            archivedGames.add(new ArchivedGame("peppers", Calendar.getInstance(), new ArrayList<String>()));
+            archivedGames.add(new ArchivedGame("TEgla", dr, new ArrayList<String>()));
             saveGames();
-            */
+
         }
         else{
             archiveAdapter = new ArchiveListAdapter(this, archivedGames);
             noGames.setVisibility(View.GONE);
             archiveList.setAdapter(archiveAdapter);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.archive_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(archivedGames == null || archivedGames.isEmpty()){
+            return false;
+        }
+
+        switch (id) {
+            case R.id.sort_by_name:
+                Collections.sort(archivedGames, new CompareByName());
+                archiveList.setAdapter(archiveAdapter);
+                return true;
+
+            case R.id.sort_by_date:
+                Collections.sort(archivedGames, new CompareByDate());
+                archiveList.setAdapter(archiveAdapter);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -104,7 +156,7 @@ public class ArchiveActivity extends AppCompatActivity implements Serializable {
     }
 
     private void setDeleteListener(View v, final int position){
-        deleteText = (TextView) v.findViewById(R.id.selected_archive_delete);
+        TextView deleteText = (TextView) v.findViewById(R.id.selected_archive_delete);
         deleteText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

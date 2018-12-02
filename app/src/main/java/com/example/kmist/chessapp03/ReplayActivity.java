@@ -13,6 +13,10 @@ public class ReplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_replay);
 
+        //make a back button
+        android.support.v7.app.ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+
         String gn = getIntent().getStringExtra("archived_game_name");
         ArrayList<String> ag = getIntent().getStringArrayListExtra("archived_game_moves");
 

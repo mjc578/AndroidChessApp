@@ -5,4 +5,7 @@
     <string name="no_games">No Archived Games</string>
     <string name="delete_selected">DELETE</string>
     <string name="play_selected">PLAY</string>
+    <string name="sort_menu">Sort By</string>
+    <string name="sort_name">Name</string>
+    <string name="sort_date">Date</string>
 </resources>
