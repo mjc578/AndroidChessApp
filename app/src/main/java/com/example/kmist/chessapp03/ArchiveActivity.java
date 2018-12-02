@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,7 +21,6 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 
 import comparators.CompareByDate;
 import comparators.CompareByName;
@@ -112,6 +110,11 @@ public class ArchiveActivity extends AppCompatActivity {
             case R.id.sort_by_date:
                 Collections.sort(archivedGames, new CompareByDate());
                 archiveList.setAdapter(archiveAdapter);
+                return true;
+
+            case android.R.id.home:
+                Intent i = new Intent(ArchiveActivity.this, Chess.class);
+                startActivity(i);
                 return true;
 
             default:
