@@ -280,5 +280,4 @@ public abstract class Pieces{
 			}
 		}
 	}
-
 }

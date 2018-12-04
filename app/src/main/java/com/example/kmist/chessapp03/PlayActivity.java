@@ -5,25 +5,42 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.renderscript.Sampler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import board.Board;
 import pieces.Position;
 
-public class PlayActivity extends AppCompatActivity implements Serializable {
+public class PlayActivity extends AppCompatActivity {
 
     //when undo button is pressed, set to true, and on start of game
     //set to be false when a regular move has been made
     private boolean undoPressed = true;
 
     private Button undoButton;
+    private GridView board;
+    private FrameLayout square;
+    private ImageView color;
+    private ImageView piece;
+
+    String[] array = {
+            "R.drawable.light", "R.drawable.dark"
+    };
+
+    List<String> listSource = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +53,26 @@ public class PlayActivity extends AppCompatActivity implements Serializable {
 
         setUndoListener();
 
+        //make the board
+        Board board = new Board();
+        //populate the board
+        board.populate();
+
+
+        /*
+        setUpList();
+
+        GridView board = (GridView) findViewById(R.id.board);
+        ChessBoardAdapter adapter = new ChessBoardAdapter(this);
+        board.setAdapter(adapter);
+
+        */
+
+    }
+
+    private void setUpList() {
+        for (String item:array)
+            listSource.add(item);
     }
 
     //set listener for undo button
