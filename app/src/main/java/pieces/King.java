@@ -27,8 +27,8 @@ public class King extends Pieces{
 	 * @param currentPosition Current position on the board
 	 * 
 	 */
-	public King(String name, String color, Position currentPosition) {
-		super(name, color, currentPosition);
+	public King(String name, String color, Position currentPosition, int resImage) {
+		super(name, color, currentPosition, resImage);
 	}
 	
 	/**
@@ -247,7 +247,7 @@ public class King extends Pieces{
 			}
 		}
 		
-		King tempKing = new King(this.getName(), this.getColor(), np);
+		King tempKing = new King(this.getName(), this.getColor(), np, this.getResImage());
 		temp.getBoard()[np.getFile()][np.getRank()] = tempKing;
 		temp.getBoard()[this.getPosition().getFile()][this.getPosition().getRank()] = null;
 		if(tempKing.isInCheck(temp)) {

@@ -1,6 +1,8 @@
 package com.example.kmist.chessapp03;
 
 import android.content.Context;
+import android.text.Layout;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,60 +11,50 @@ import android.widget.ImageView;
 
 import java.util.List;
 
-public class ChessBoardAdapter extends BaseAdapter {
-    private Context mContext;
-    private int count = 0;
+import board.Board;
+import pieces.Pieces;
 
-    public ChessBoardAdapter(Context c){
+public class ChessBoardAdapter extends BaseAdapter {
+
+    private Context mContext;
+    private int ms = 0;
+    private Pieces[] oneDboard;
+    private LayoutInflater mli;
+    private Integer[] squareColors = {
+            R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark,
+            R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark,
+            R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light,
+            R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light,
+            R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark,
+            R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark,
+            R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light,
+            R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light,
+            R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark,
+            R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark,
+            R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light,
+            R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light,
+            R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark,
+            R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark,
+            R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light,
+            R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light,
+    };
+
+    public ChessBoardAdapter(Context c, Board board){
+        oneDboard = new Pieces[64];
+        mli = LayoutInflater.from(c.getApplicationContext());
+        int count = 0;
+        for(int i = 7; i >= 0; i--){
+            for(int j = 0; j < 8; j++){
+                oneDboard[count] = board.getBoard()[j][i];
+                count++;
+            }
+        }
         this.mContext = c;
     }
 
-    public void increment (int count){
-        count++;
-    }
-
-
-    private Integer[] squareColors = {
-            R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark,
-            R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light,
-            R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark,
-            R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light,
-            R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark,
-            R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light,
-            R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark,
-            R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light, R.drawable.dark, R.drawable.light
-
-
-
-    };
-
-
-
-    /*
-    boolean bw = true; //true if black
-    private Integer[][] chessboard;
-
-    //sets colors for squares of chess board
-    public void setSquareColors(){
-        for (int i=0; i<8; i++){
-            for (int j=0; j<8; j++){
-                if (bw == true){
-                    chessboard[i][j] = R.drawable.dark;
-                    bw = false;
-
-                }
-                else{
-                    chessboard[i][j] = R.drawable.light;
-                    bw = true;
-                }
-            }
-        }
-    }
-    */
-
     @Override
     public int getCount() {
-        return squareColors.length;
+        return 64;
     }
 
     @Override
@@ -77,27 +69,20 @@ public class ChessBoardAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView = new ImageView(mContext);
-        imageView.setLayoutParams(new GridView.LayoutParams(90,90));
-        imageView.setImageResource(squareColors[position]);
-        return imageView;
+        View squareView = convertView;
+        if(squareView == null){
+            squareView = mli.inflate(R.layout.square, parent, false);
+
+            ImageView background = squareView.findViewById(R.id.color);
+            background.setImageResource(squareColors[position]);
+            background.setTag(squareColors[position]);
+
+            ImageView piece = squareView.findViewById(R.id.piece);
+            if(oneDboard[position] != null){
+                piece.setImageResource(oneDboard[position].getResImage());
+            }
+        }
+
+        return squareView;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

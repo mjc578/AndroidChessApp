@@ -8,6 +8,8 @@
 
 package board;
 
+import com.example.kmist.chessapp03.R;
+
 import pieces.Bishop;
 import pieces.King;
 import pieces.Knight;
@@ -60,32 +62,32 @@ public class Board {
 	 * Method to populate board with pieces at their correct starting positions.
 	 */
 	public void populate() {
-		board[0][7] = new Rook("Rook", "black", new Position('a', 8));
-		board[1][7] = new Knight("Night", "black", new Position('b', 8));
-		board[2][7] = new Bishop("Bishop", "black", new Position('c', 8));
-		board[3][7] = new Queen("Queen", "black", new Position('d', 8));
-		board[4][7] = new King("King", "black", new Position('e', 8));
-		board[5][7] = new Bishop("Bishop", "black", new Position('f', 8));
-		board[6][7] = new Knight("Night", "black", new Position('g', 8));
-		board[7][7] = new Rook("Rook", "black", new Position('h', 8));
+		board[0][7] = new Rook("Rook", "black", new Position('a', 8), R.drawable.brook);
+		board[1][7] = new Knight("Night", "black", new Position('b', 8), R.drawable.bknight);
+		board[2][7] = new Bishop("Bishop", "black", new Position('c', 8), R.drawable.bbishop);
+		board[3][7] = new Queen("Queen", "black", new Position('d', 8), R.drawable.bqueen);
+		board[4][7] = new King("King", "black", new Position('e', 8), R.drawable.bking);
+		board[5][7] = new Bishop("Bishop", "black", new Position('f', 8), R.drawable.bbishop);
+		board[6][7] = new Knight("Night", "black", new Position('g', 8), R.drawable.bknight);
+		board[7][7] = new Rook("Rook", "black", new Position('h', 8), R.drawable.brook);
 		
 		for(int i = 0; i < board.length; i++) {
-			board[i][6] = new Pawn("pawn", "black", new Position(Position.toChar(i + 1), 7));
+			board[i][6] = new Pawn("pawn", "black", new Position(Position.toChar(i + 1), 7), R.drawable.bpawn);
 		}
 		
 		//16 whites:
 		
-		board[0][0] = new Rook("Rook", "white", new Position('a', 1));
-		board[1][0] = new Knight("Night", "white", new Position('b', 1));
-		board[2][0] = new Bishop("Bishop", "white", new Position('c', 1));
-		board[3][0] = new Queen("Queen", "white", new Position('d', 1));
-		board[4][0] = new King("King", "white", new Position('e', 1));
-		board[5][0] = new Bishop("Bishop", "white", new Position('f', 1));
-		board[6][0] = new Knight("Night", "white", new Position('g', 1));
-		board[7][0] = new Rook("Rook", "white", new Position('h', 1));
+		board[0][0] = new Rook("Rook", "white", new Position('a', 1), R.drawable.wrook);
+		board[1][0] = new Knight("Night", "white", new Position('b', 1), R.drawable.wknight);
+		board[2][0] = new Bishop("Bishop", "white", new Position('c', 1), R.drawable.wbishop);
+		board[3][0] = new Queen("Queen", "white", new Position('d', 1), R.drawable.wqueen);
+		board[4][0] = new King("King", "white", new Position('e', 1), R.drawable.wking);
+		board[5][0] = new Bishop("Bishop", "white", new Position('f', 1), R.drawable.wbishop);
+		board[6][0] = new Knight("Night", "white", new Position('g', 1), R.drawable.wknight);
+		board[7][0] = new Rook("Rook", "white", new Position('h', 1), R.drawable.wrook);
 		
 		for(int i = 0; i < board.length; i++) {
-			board[i][1] = new Pawn("pawn", "white", new Position(Position.toChar(i + 1), 2));
+			board[i][1] = new Pawn("pawn", "white", new Position(Position.toChar(i + 1), 2), R.drawable.wpawn);
 		}
 	}
 	
@@ -176,7 +178,7 @@ public class Board {
 			}
 		}
 		if(board.getBoard()[p.getFile()][p.getRank()] == null) {
-			temp.getBoard()[p.getFile()][p.getRank()] = new Pawn("", "", new Position('a', 1));
+			temp.getBoard()[p.getFile()][p.getRank()] = new Pawn("", "", new Position('a', 1), R.drawable.wpawn);
 		}			
 		for(int i = 0; i < temp.getBoard().length; i++) {
 			for(int j = 0; j < temp.getBoard().length; j++) {

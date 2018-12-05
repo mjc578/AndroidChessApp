@@ -47,9 +47,4 @@ public class ArchiveListAdapter extends ArrayAdapter<ArchivedGame> {
 
         return listItemView;
     }
-
-    //method for retrieving the saved project list when resuming/creating activity
-    public ArrayList<ArchivedGame> getProjectList(){
-        return archiveList;
-    }
 }

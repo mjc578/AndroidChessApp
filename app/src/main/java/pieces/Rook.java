@@ -26,8 +26,8 @@ public class Rook extends Pieces{
 	 * @param color "black" or "white"
 	 * @param position Current position on the Chess board
 	 */
-	public Rook(String name, String color, Position position) {
-		super(name, color, position);
+	public Rook(String name, String color, Position position, int resImage) {
+		super(name, color, position, resImage);
 	}
 	
 	/**

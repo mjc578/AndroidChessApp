@@ -22,8 +22,8 @@ public class Knight extends Pieces{
 	 * @param color "black" or "white"
 	 * @param currentPosition Current position on board
 	 */
-	public Knight(String name, String color, Position currentPosition) {
-		super(name, color, currentPosition);
+	public Knight(String name, String color, Position currentPosition, int resImage) {
+		super(name, color, currentPosition, resImage);
 	}
 	
 	/**

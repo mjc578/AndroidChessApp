@@ -1,28 +1,20 @@
 package com.example.kmist.chessapp03;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.renderscript.Sampler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import board.Board;
-import pieces.Position;
 
 public class PlayActivity extends AppCompatActivity {
 
@@ -31,16 +23,12 @@ public class PlayActivity extends AppCompatActivity {
     private boolean undoPressed = true;
 
     private Button undoButton;
-    private GridView board;
-    private FrameLayout square;
-    private ImageView color;
-    private ImageView piece;
+    private Board board;
+    private GridView boardView;
+    private boolean firstTouch;
+    private int firstColor;
+    private int[] firstCoords;
 
-    String[] array = {
-            "R.drawable.light", "R.drawable.dark"
-    };
-
-    List<String> listSource = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,28 +39,67 @@ public class PlayActivity extends AppCompatActivity {
         android.support.v7.app.ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
-        setUndoListener();
-
         //make the board
-        Board board = new Board();
+        board = new Board();
         //populate the board
         board.populate();
 
+        firstCoords = new int[2];
+        firstCoords[0] = -1;
+        firstCoords[1] = -1;
 
-        /*
-        setUpList();
-
-        GridView board = (GridView) findViewById(R.id.board);
-        ChessBoardAdapter adapter = new ChessBoardAdapter(this);
-        board.setAdapter(adapter);
-
-        */
+        setUndoListener();
+        setGridViewListener();
 
     }
 
-    private void setUpList() {
-        for (String item:array)
-            listSource.add(item);
+    //set listener for the gridview
+    private void setGridViewListener(){
+
+        boardView = (GridView) findViewById(R.id.board);
+        ChessBoardAdapter adapter = new ChessBoardAdapter(this, board);
+        boardView.setAdapter(adapter);
+
+        AdapterView.OnItemClickListener boardListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+                ImageView background = (ImageView) view.findViewById(R.id.color);
+
+
+
+                int rank = Math.abs(position/8 - 7);
+                int file = position%8;
+
+                //selecting a first move
+                if (!firstTouch) {
+                    firstColor = (Integer) background.getTag();
+                    background.setImageResource(R.drawable.selected);
+                    firstCoords = new int[2];
+                    firstCoords[0] = file;
+                    firstCoords[1] = rank;
+                    firstTouch = true;
+                }
+                //selecting a second move, how spicy
+                else{
+                    //they selected the same spot, they were having doubts, how pitiful
+                    if(file == firstCoords[0] && rank == firstCoords[1]){
+                        background.setImageResource(firstColor);
+                    }
+                    //they selected another space! how daring! check if they can move there
+                    else{
+
+                    }
+
+                    firstTouch = false;
+                }
+                Log.e("position", "file is :" + file + "  rank is :" + rank);
+                Log.e("piece name: ", "piece is: " + board.getBoard()[file][rank] + " " + board.getBoard()[file][rank].getName());
+            }
+
+        };
+        boardView.setOnItemClickListener(boardListener);
     }
 
     //set listener for undo button
@@ -116,6 +143,4 @@ public class PlayActivity extends AppCompatActivity {
                 .setNegativeButton("No", dialogListener).show();
         return true;
     }
-
-
 }

@@ -19,8 +19,8 @@ public class Bishop extends Pieces{
 	 * @param color "black" or "white"
 	 * @param position Current position on the board
 	 */
-	public Bishop(String name, String color, Position position) {
-		super(name, color, position);
+	public Bishop(String name, String color, Position position, int resImage) {
+		super(name, color, position, resImage);
 	}
 
 	/**

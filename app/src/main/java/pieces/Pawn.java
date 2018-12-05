@@ -12,6 +12,8 @@
 
 package pieces;
 
+import com.example.kmist.chessapp03.R;
+
 import board.Board;
 
 public class Pawn extends Pieces{
@@ -33,8 +35,8 @@ public class Pawn extends Pieces{
 	 * @param currentPosition Current position on the board
 	 * 
 	 */
-	public Pawn(String name, String color, Position currentPosition) {
-		super(name, color, currentPosition);
+	public Pawn(String name, String color, Position currentPosition, int resImage) {
+		super(name, color, currentPosition, resImage);
 	}
 	
 	/**
@@ -244,7 +246,11 @@ public class Pawn extends Pieces{
 		
 		board.getBoard()[np.getFile()][np.getRank()] = this;
 		if(np.getRank() == 7 || np.getRank() == 0) {
-			board.getBoard()[np.getFile()][np.getRank()] = new Queen("Queen", this.getColor(), np);
+			int resid = R.drawable.bqueen;
+			if(this.getColor().equals("white")){
+				resid = R.drawable.wqueen;
+			}
+			board.getBoard()[np.getFile()][np.getRank()] = new Queen("Queen", this.getColor(), np, resid);
 		}
 		
 		board.getBoard()[this.getPosition().getFile()][this.getPosition().getRank()] = null;
@@ -277,18 +283,36 @@ public class Pawn extends Pieces{
 		if(!test) {
 			return false;
 		}
+
+		int resid;
 		
 		if(promotion.equals("N")) {
-			board.getBoard()[np.getFile()][np.getRank()] = new Knight("Night", this.getColor(), np);
+			resid = R.drawable.bknight;
+			if(this.getColor().equals("white")){
+				resid = R.drawable.wknight;
+			}
+			board.getBoard()[np.getFile()][np.getRank()] = new Knight("Night", this.getColor(), np, resid);
 		}
 		else if(promotion.equals("Q")) {
-			board.getBoard()[np.getFile()][np.getRank()] = new Queen("Queen", this.getColor(), np);
+			resid = R.drawable.bqueen;
+			if(this.getColor().equals("white")){
+				resid = R.drawable.wqueen;
+			}
+			board.getBoard()[np.getFile()][np.getRank()] = new Queen("Queen", this.getColor(), np, resid);
 		}
 		else if(promotion.equals("R")) {
-			board.getBoard()[np.getFile()][np.getRank()] = new Rook("Rook", this.getColor(), np);
+			resid = R.drawable.brook;
+			if(this.getColor().equals("white")){
+				resid = R.drawable.wrook;
+			}
+			board.getBoard()[np.getFile()][np.getRank()] = new Rook("Rook", this.getColor(), np, resid);
 		}
 		else if(promotion.equals("B")) {
-			board.getBoard()[np.getFile()][np.getRank()] = new Bishop("Bishop", this.getColor(), np);
+			resid = R.drawable.bbishop;
+			if(this.getColor().equals("white")){
+				resid = R.drawable.wbishop;
+			}
+			board.getBoard()[np.getFile()][np.getRank()] = new Bishop("Bishop", this.getColor(), np, resid);
 		}
 		else {
 			//entered a piece that was invalid

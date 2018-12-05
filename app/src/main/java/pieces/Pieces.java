@@ -20,6 +20,7 @@ public abstract class Pieces{
 	final private String name;
 	final private String color;
 	private Position currentPosition;
+	final private int resImage;
 	
 	/**
 	 * Constructor to be used by Pieces subclasses to initialize common fields.
@@ -28,10 +29,11 @@ public abstract class Pieces{
 	 * @param color The piece's color
 	 * @param currentPosition The piece's current chess board position
 	 */
-	public Pieces(String name, String color, Position currentPosition) {
+	public Pieces(String name, String color, Position currentPosition, int resImage) {
 		this.name = name;
 		this.color = color;
 		this.currentPosition = currentPosition;
+		this.resImage = resImage;
 	}
 	
 	/**
@@ -56,6 +58,10 @@ public abstract class Pieces{
 	 */
 	public String getColor() {
 		return color;
+	}
+
+	public int getResImage(){
+		return resImage;
 	}
 	
 	/** Method to set piece's current position when it changes places.

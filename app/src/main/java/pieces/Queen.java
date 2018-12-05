@@ -21,8 +21,8 @@ public class Queen extends Pieces{
 	 * @param color "black" or "white"
 	 * @param currentPosition Current position of piece on chess board
 	 */
-	public Queen(String name, String color, Position currentPosition) {
-		super(name, color, currentPosition);
+	public Queen(String name, String color, Position currentPosition, int resImage) {
+		super(name, color, currentPosition, resImage);
 	}
 
 	/**
