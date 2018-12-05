@@ -8,4 +8,10 @@
     <string name="sort_menu">Sort By</string>
     <string name="sort_name">Name</string>
     <string name="sort_date">Date</string>
+    <string name="white_move">White\'s Move</string>
+    <string name="white_wins">White Wins!</string>
+    <string name="black_wins">Black Wins!</string>
+    <string name="black_move">Black\'s Move</string>
+    <string name="check">Check</string>
+    <string name="checkmate">Checkmate</string>
 </resources>

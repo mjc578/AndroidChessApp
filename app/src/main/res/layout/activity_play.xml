@@ -63,9 +63,49 @@
         android:id="@+id/whosMove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="60dp"
+        android:layout_marginBottom="105dp"
+        android:text="White's Move" />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="78dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/whosMove"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="60dp"/>
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="104dp"
-        android:text="White Player's Move" />
+        android:layout_marginBottom="9dp"
+        android:text="Save Game"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/checkmate_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/who_won"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:text="Checkmate"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/who_won"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/checkmate_text"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="63dp"
+        android:text="TextView"
+        android:visibility="invisible" />
 
 </RelativeLayout>

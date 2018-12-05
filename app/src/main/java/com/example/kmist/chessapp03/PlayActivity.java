@@ -12,23 +12,34 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import board.Board;
+import pieces.King;
+import pieces.Position;
 
 public class PlayActivity extends AppCompatActivity {
 
-    //when undo button is pressed, set to true, and on start of game
-    //set to be false when a regular move has been made
     private boolean undoPressed = true;
-
     private Button undoButton;
+    private Button resignButton;
+    private Button drawButton;
+    private Button randomButton;
+    private Button saveButton;
+    private TextView checkmateText;
+    private TextView winnerText;
+    private TextView whosMove;
+    private TextView check;
     private Board board;
     private GridView boardView;
     private boolean firstTouch;
     private int firstColor;
-    private int[] firstCoords;
-
+    private ChessBoardAdapter adapter;
+    private boolean whiteTurn = true;
+    private ArrayList<Position> savedMoves;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,58 +55,111 @@ public class PlayActivity extends AppCompatActivity {
         //populate the board
         board.populate();
 
-        firstCoords = new int[2];
-        firstCoords[0] = -1;
-        firstCoords[1] = -1;
+        savedMoves = new ArrayList<>();
+
+        whosMove = (TextView) findViewById(R.id.whosMove);
+        check = (TextView) findViewById(R.id.status);
+        checkmateText = (TextView) findViewById(R.id.checkmate_text);
+        winnerText = (TextView) findViewById(R.id.who_won);
+        resignButton = (Button) findViewById(R.id.resign_button);
+        drawButton = (Button) findViewById(R.id.draw_button);
+        randomButton = (Button) findViewById(R.id.random_move_button);
+        saveButton = (Button) findViewById(R.id.save_button);
+
+        whosMove.setText(R.string.white_move);
 
         setUndoListener();
         setGridViewListener();
-
     }
 
     //set listener for the gridview
     private void setGridViewListener(){
 
         boardView = (GridView) findViewById(R.id.board);
-        ChessBoardAdapter adapter = new ChessBoardAdapter(this, board);
+        adapter = new ChessBoardAdapter(this, board);
         boardView.setAdapter(adapter);
 
         AdapterView.OnItemClickListener boardListener = new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ImageView background = (ImageView) view.findViewById(R.id.color);
 
-
-
-                int rank = Math.abs(position/8 - 7);
-                int file = position%8;
-
+                int rank = Math.abs((position / 8) - 7);
+                int file = position % 8;
+                Position curr = new Position(Position.toChar(file + 1), rank + 1);
+                //don't even ACKNOWLEDGE the first move selection of an empty space
+                if(board.getBoard()[file][rank] == null && !firstTouch){
+                    return;
+                }
                 //selecting a first move
                 if (!firstTouch) {
+                    //the other play is trying to select the other player's piece, how naughty!!!
+                    if((whiteTurn && board.atPosition(curr).getColor().equals("black")) || (!whiteTurn && board.atPosition(curr).getColor().equals("white"))){
+                        return;
+                    }
                     firstColor = (Integer) background.getTag();
                     background.setImageResource(R.drawable.selected);
-                    firstCoords = new int[2];
-                    firstCoords[0] = file;
-                    firstCoords[1] = rank;
+                    savedMoves.add(curr);
                     firstTouch = true;
                 }
                 //selecting a second move, how spicy
                 else{
+                    Position prev = savedMoves.get(savedMoves.size() - 1);
                     //they selected the same spot, they were having doubts, how pitiful
-                    if(file == firstCoords[0] && rank == firstCoords[1]){
+                    if(file == prev.getFile() && rank == prev.getRank()){
                         background.setImageResource(firstColor);
+                        //they had doubts so remove their first move
+                        savedMoves.remove(savedMoves.size() - 1);
                     }
                     //they selected another space! how daring! check if they can move there
                     else{
-
+                        //piece will only move if it can otherwise nothing happens
+                        boolean s = board.getBoard()[prev.getFile()][prev.getRank()].move(curr, board);
+                        //successful move, store the move and maintain the pawns
+                        if(s){
+                            board.maintainPawn();
+                            savedMoves.add(curr);
+                            //check if the move put opponent in check or checkmate
+                            if(whiteTurn){
+                                King k = (King) board.atPosition(board.getPositionKing("black", board));
+                                if(k.isInCheck(board)){
+                                    if(k.isCheckmated(board)){
+                                        //end the game, hide all buttons
+                                        hideGameViews();
+                                        showWinViews();
+                                    }
+                                    check.setText(R.string.check);
+                                }
+                            }
+                            else{
+                                King k = (King) board.atPosition(board.getPositionKing("white", board));
+                                if(k.isInCheck(board)){
+                                    if(k.isCheckmated(board)){
+                                        //end the game, hide all buttons
+                                        hideGameViews();
+                                        showWinViews();
+                                    }
+                                    check.setText(R.string.check);
+                                }
+                            }
+                            whiteTurn = !whiteTurn;
+                            if(!whiteTurn){
+                                whosMove.setText(R.string.black_move);
+                            }
+                            else{
+                                whosMove.setText(R.string.white_move);
+                            }
+                        }
+                        //unsuccessful move, remove the first position from the array list
+                        else{
+                            savedMoves.remove(savedMoves.size() - 1);
+                        }
+                        adapter = new ChessBoardAdapter(PlayActivity.this, board);
+                        boardView.setAdapter(adapter);
                     }
 
                     firstTouch = false;
                 }
-                Log.e("position", "file is :" + file + "  rank is :" + rank);
-                Log.e("piece name: ", "piece is: " + board.getBoard()[file][rank] + " " + board.getBoard()[file][rank].getName());
             }
 
         };
@@ -142,5 +206,29 @@ public class PlayActivity extends AppCompatActivity {
         builder.setMessage("Return to main menu? (Game will not be saved)").setPositiveButton("Yes", dialogListener)
                 .setNegativeButton("No", dialogListener).show();
         return true;
+    }
+
+    public void hideGameViews(){
+        undoButton.setVisibility(View.GONE);
+        resignButton.setVisibility(View.GONE);
+        randomButton.setVisibility(View.GONE);
+        drawButton.setVisibility(View.GONE);
+        whosMove.setVisibility(View.GONE);
+        check.setVisibility(View.GONE);
+    }
+
+    public void showWinViews(){
+        checkmateText.setVisibility(View.VISIBLE);
+        winnerText.setVisibility(View.VISIBLE);
+        saveButton.setVisibility(View.VISIBLE);
+
+        if(whiteTurn){
+            winnerText.setText(R.string.white_wins);
+        }
+        else {
+            winnerText.setText(R.string.black_wins);
+        }
+
+        boardView.setOnItemClickListener(null);
     }
 }
