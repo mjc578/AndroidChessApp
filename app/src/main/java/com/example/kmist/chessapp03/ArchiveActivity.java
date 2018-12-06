@@ -59,25 +59,6 @@ public class ArchiveActivity extends AppCompatActivity {
 
         if(archivedGames == null){
             archiveList.setVisibility(View.GONE);
-
-            Calendar dr = Calendar.getInstance();
-            dr.set(Calendar.YEAR, 1999);
-            dr.set(Calendar.MONTH, 7);
-            dr.set(Calendar.DAY_OF_MONTH, 26);
-
-            Calendar drr = Calendar.getInstance();
-            drr.set(Calendar.YEAR, 2007);
-            drr.set(Calendar.MONTH, 5);
-            drr.set(Calendar.DAY_OF_MONTH, 13);
-
-            archivedGames = new ArrayList<>();
-            archivedGames.add(new ArchivedGame("TGSOE", Calendar.getInstance(), new ArrayList<String>()));
-            archivedGames.add(new ArchivedGame("EOGES", Calendar.getInstance(), new ArrayList<String>()));
-            archivedGames.add(new ArchivedGame("bripers", drr, new ArrayList<String>()));
-            archivedGames.add(new ArchivedGame("peppers", Calendar.getInstance(), new ArrayList<String>()));
-            archivedGames.add(new ArchivedGame("TEgla", dr, new ArrayList<String>()));
-            saveGames();
-
         }
         else{
             archiveAdapter = new ArchiveListAdapter(this, archivedGames);
@@ -123,7 +104,6 @@ public class ArchiveActivity extends AppCompatActivity {
     }
 
     public void saveGames() {
-
         FileOutputStream fos;
         ObjectOutputStream out;
         try {

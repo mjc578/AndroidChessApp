@@ -14,4 +14,8 @@
     <string name="black_move">Black\'s Move</string>
     <string name="check">Check</string>
     <string name="checkmate">Checkmate</string>
+    <string name="draw">Draw</string>
+    <string name="white_resigns">White Resigned</string>
+    <string name="black_resigns">Black Resigned</string>
+    <string name="enter_name">Enter Project Name</string>
 </resources>

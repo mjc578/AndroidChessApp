@@ -5,17 +5,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import board.Board;
 import pieces.King;
@@ -34,12 +41,16 @@ public class PlayActivity extends AppCompatActivity {
     private TextView whosMove;
     private TextView check;
     private Board board;
+    private Board prevBoard;
     private GridView boardView;
     private boolean firstTouch;
     private int firstColor;
     private ChessBoardAdapter adapter;
     private boolean whiteTurn = true;
     private ArrayList<Position> savedMoves;
+    private String saveGameText = "";
+    private ArrayList<ArchivedGame> savedGames;
+    private int gameOutcome = 0; //1 for checkmate, 2 for draw, 3 for resignation, 4 for stalemate?
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,24 +66,22 @@ public class PlayActivity extends AppCompatActivity {
         //populate the board
         board.populate();
 
+        savedGames = getSavedGames();
         savedMoves = new ArrayList<>();
 
         whosMove = (TextView) findViewById(R.id.whosMove);
         check = (TextView) findViewById(R.id.status);
         checkmateText = (TextView) findViewById(R.id.checkmate_text);
         winnerText = (TextView) findViewById(R.id.who_won);
-        resignButton = (Button) findViewById(R.id.resign_button);
-        drawButton = (Button) findViewById(R.id.draw_button);
         randomButton = (Button) findViewById(R.id.random_move_button);
-        saveButton = (Button) findViewById(R.id.save_button);
 
-        whosMove.setText(R.string.white_move);
-
+        setSaveListener();
         setUndoListener();
         setGridViewListener();
+        setResignListener();
+        setDrawListener();
     }
 
-    //set listener for the gridview
     private void setGridViewListener(){
 
         boardView = (GridView) findViewById(R.id.board);
@@ -117,6 +126,7 @@ public class PlayActivity extends AppCompatActivity {
                         boolean s = board.getBoard()[prev.getFile()][prev.getRank()].move(curr, board);
                         //successful move, store the move and maintain the pawns
                         if(s){
+                            undoPressed = false;
                             board.maintainPawn();
                             savedMoves.add(curr);
                             //check if the move put opponent in check or checkmate
@@ -130,6 +140,9 @@ public class PlayActivity extends AppCompatActivity {
                                     }
                                     check.setText(R.string.check);
                                 }
+                                else{
+                                    check.setText("");
+                                }
                             }
                             else{
                                 King k = (King) board.atPosition(board.getPositionKing("white", board));
@@ -140,6 +153,9 @@ public class PlayActivity extends AppCompatActivity {
                                         showWinViews();
                                     }
                                     check.setText(R.string.check);
+                                }
+                                else{
+                                    check.setText("");
                                 }
                             }
                             whiteTurn = !whiteTurn;
@@ -166,7 +182,6 @@ public class PlayActivity extends AppCompatActivity {
         boardView.setOnItemClickListener(boardListener);
     }
 
-    //set listener for undo button
     private void setUndoListener(){
         undoButton = findViewById(R.id.undo_button);
         undoButton.setOnClickListener(new View.OnClickListener() {
@@ -178,12 +193,135 @@ public class PlayActivity extends AppCompatActivity {
                 }
                 else{
                     //do the undoing...
+                    if(firstTouch){
+                        savedMoves.remove(savedMoves.size() - 1);
+                        firstTouch = !firstTouch;
+                    }
+                    savedMoves.remove(savedMoves.size() - 1);
+                    savedMoves.remove(savedMoves.size() - 1);
+
+                    adapter = new ChessBoardAdapter(PlayActivity.this, board);
+                    boardView.setAdapter(adapter);
                     undoPressed = true;
+                    whiteTurn = !whiteTurn;
+                    whosMove.setText(R.string.black_move);
+                    if(whiteTurn){
+                        whosMove.setText(R.string.white_move);
+                    }
                 }
             }
         });
     }
 
+    private void setResignListener(){
+        resignButton = (Button) findViewById(R.id.resign_button);
+        resignButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                //Yes button clicked
+                                whiteTurn = !whiteTurn;
+                                gameOutcome = 3;
+                                hideGameViews();
+                                showWinViews();
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(PlayActivity.this);
+                builder.setMessage("Resign?").setPositiveButton("Yes", dialogListener)
+                        .setNegativeButton("No", dialogListener).show();
+            }
+        });
+    }
+
+    private void setDrawListener(){
+        drawButton = (Button) findViewById(R.id.draw_button);
+        drawButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                //Yes button clicked
+                                whiteTurn = !whiteTurn;
+                                gameOutcome = 2;
+                                hideGameViews();
+                                showWinViews();
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(PlayActivity.this);
+                builder.setMessage("Confirm to a draw?").setPositiveButton("Yes", dialogListener)
+                        .setNegativeButton("No", dialogListener).show();
+            }
+        });
+    }
+
+    private void setSaveListener(){
+        saveButton = (Button) findViewById(R.id.save_button);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog dialog = new AlertDialog.Builder(PlayActivity.this)
+                        .setView(v)
+                        .setTitle(R.string.enter_name)
+                        .setPositiveButton(android.R.string.ok, null) //Set to null. We override the onclick
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .create();
+
+                final EditText input = new EditText(PlayActivity.this);
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                dialog.setView(input);
+
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+
+                        Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                        button.setOnClickListener(new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View view) {
+                                saveGameText = input.getText().toString();
+                                if(saveGameText.equals("")){
+                                    Toast.makeText(PlayActivity.this, "Enter a Game Name", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                ArchivedGame currentGame = new ArchivedGame(saveGameText, Calendar.getInstance(), savedMoves);
+                                savedGames.add(currentGame);
+                                saveGames();
+
+                                //Dismiss once everything is OK.
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+                });
+                dialog.show();
+            }
+        });
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item){
         DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
             @Override
@@ -208,7 +346,7 @@ public class PlayActivity extends AppCompatActivity {
         return true;
     }
 
-    public void hideGameViews(){
+    private void hideGameViews(){
         undoButton.setVisibility(View.GONE);
         resignButton.setVisibility(View.GONE);
         randomButton.setVisibility(View.GONE);
@@ -217,10 +355,25 @@ public class PlayActivity extends AppCompatActivity {
         check.setVisibility(View.GONE);
     }
 
-    public void showWinViews(){
+    private void showWinViews(){
         checkmateText.setVisibility(View.VISIBLE);
         winnerText.setVisibility(View.VISIBLE);
         saveButton.setVisibility(View.VISIBLE);
+
+        if(gameOutcome == 2){
+            checkmateText.setText(R.string.draw);
+            winnerText.setText("");
+            boardView.setOnItemClickListener(null);
+            return;
+        }
+        else if(gameOutcome == 3){
+            if(whiteTurn){
+                checkmateText.setText(R.string.black_resigns);
+            }
+            else{
+                checkmateText.setText(R.string.white_resigns);
+            }
+        }
 
         if(whiteTurn){
             winnerText.setText(R.string.white_wins);
@@ -230,5 +383,33 @@ public class PlayActivity extends AppCompatActivity {
         }
 
         boardView.setOnItemClickListener(null);
+    }
+
+    private String filename = "games.dat";
+
+    private void saveGames() {
+        FileOutputStream fos;
+        ObjectOutputStream out;
+        try {
+            fos = this.openFileOutput(filename, MODE_PRIVATE);
+            out = new ObjectOutputStream(fos);
+            out.writeObject(savedGames);
+            out.close();
+        } catch (IOException ex) {}
+    }
+
+    private ArrayList<ArchivedGame> getSavedGames(){
+        ArrayList<ArchivedGame> a = null;
+        try {
+            FileInputStream fis = openFileInput(filename);
+            ObjectInputStream oin = new ObjectInputStream(fis);
+            a = (ArrayList<ArchivedGame>) oin.readObject();
+            oin.close();
+            fis.close();
+        } catch (Exception e){}
+        if(a == null){
+            a = new ArrayList<>();
+        }
+        return a;
     }
 }

@@ -6,13 +6,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import pieces.Position;
+
 public class ArchivedGame implements Serializable {
 
     private String name;
     private Calendar date;
-    private ArrayList<String> savedMoves;
+    private ArrayList<Position> savedMoves;
 
-    public ArchivedGame(String name, Calendar date, ArrayList<String> savedMoves){
+    public ArchivedGame(String name, Calendar date, ArrayList<Position> savedMoves){
         this.name = name;
         this.date = date;
         this.savedMoves = savedMoves;
@@ -34,7 +36,7 @@ public class ArchivedGame implements Serializable {
         return savedMoves.size()/2;
     }
 
-    public ArrayList<String> getSavedMoves(){
+    public ArrayList<Position> getSavedMoves(){
         return savedMoves;
     }
 
