@@ -73,13 +73,40 @@ public class PlayActivity extends AppCompatActivity {
         check = (TextView) findViewById(R.id.status);
         checkmateText = (TextView) findViewById(R.id.checkmate_text);
         winnerText = (TextView) findViewById(R.id.who_won);
-        randomButton = (Button) findViewById(R.id.random_move_button);
 
         setSaveListener();
         setUndoListener();
         setGridViewListener();
         setResignListener();
         setDrawListener();
+        setRandomListener();
+    }
+
+    private void setRandomListener(){
+        randomButton = (Button) findViewById(R.id.random_move_button);
+        randomButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String color = "black";
+                if(whiteTurn){
+                    color = "white";
+                }
+                //TODO an undo board should be saved here if user wants to undo random move
+                Position[] result = board.makeRandomMove(color);
+                if(result == null){
+                    Toast.makeText(PlayActivity.this, "Cannot make a random move", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                savedMoves.add(result[0]);
+                savedMoves.add(result[1]);
+                boardView.setAdapter(new ChessBoardAdapter(PlayActivity.this, board));
+                whiteTurn = !whiteTurn;
+                whosMove.setText(R.string.black_move);
+                if(whiteTurn){
+                    whosMove.setText(R.string.white_move);
+                }
+            }
+        });
     }
 
     private void setGridViewListener(){
