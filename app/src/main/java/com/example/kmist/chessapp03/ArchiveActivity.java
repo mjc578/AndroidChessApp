@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -173,8 +174,11 @@ public class ArchiveActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(ArchiveActivity.this, ReplayActivity.class);
-                i.putExtra("archived_game_name", archivedGames.get(position).getName());
-                i.putExtra("archived_game_moves", archivedGames.get(position).getSavedMoves());
+                Bundle args = new Bundle();
+                args.putSerializable("ARRAYLIST",(Serializable) archivedGames.get(position).getSavedMoves());
+                i.putExtra("BUNDLE", args);
+                i.putExtra("NAME", archivedGames.get(position).getName());
+                i.putExtra("OUTCOME", archivedGames.get(position).getGameOutcome());
                 startActivity(i);
             }
         });

@@ -13,11 +13,13 @@ public class ArchivedGame implements Serializable {
     private String name;
     private Calendar date;
     private ArrayList<Position> savedMoves;
+    private String gameOutcome;
 
-    public ArchivedGame(String name, Calendar date, ArrayList<Position> savedMoves){
+    public ArchivedGame(String name, Calendar date, ArrayList<Position> savedMoves, String gameOutcome){
         this.name = name;
         this.date = date;
         this.savedMoves = savedMoves;
+        this.gameOutcome = gameOutcome;
     }
 
     public String getName(){
@@ -40,4 +42,7 @@ public class ArchivedGame implements Serializable {
         return savedMoves;
     }
 
+    public String getGameOutcome() {
+        return gameOutcome;
+    }
 }

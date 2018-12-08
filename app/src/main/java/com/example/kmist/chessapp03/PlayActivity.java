@@ -50,7 +50,7 @@ public class PlayActivity extends AppCompatActivity {
     private ArrayList<Position> savedMoves;
     private String saveGameText = "";
     private ArrayList<ArchivedGame> savedGames;
-    private int gameOutcome = 0; //1 for checkmate, 2 for draw, 3 for resignation, 4 for stalemate?
+    private String gameOutcome = "Checkmate";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,7 +252,7 @@ public class PlayActivity extends AppCompatActivity {
                             case DialogInterface.BUTTON_POSITIVE:
                                 //Yes button clicked
                                 whiteTurn = !whiteTurn;
-                                gameOutcome = 3;
+                                gameOutcome = "resign";
                                 hideGameViews();
                                 showWinViews();
                                 break;
@@ -283,7 +283,7 @@ public class PlayActivity extends AppCompatActivity {
                             case DialogInterface.BUTTON_POSITIVE:
                                 //Yes button clicked
                                 whiteTurn = !whiteTurn;
-                                gameOutcome = 2;
+                                gameOutcome = "draw";
                                 hideGameViews();
                                 showWinViews();
                                 break;
@@ -333,7 +333,7 @@ public class PlayActivity extends AppCompatActivity {
                                     Toast.makeText(PlayActivity.this, "Enter a Game Name", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
-                                ArchivedGame currentGame = new ArchivedGame(saveGameText, Calendar.getInstance(), savedMoves);
+                                ArchivedGame currentGame = new ArchivedGame(saveGameText, Calendar.getInstance(), savedMoves, gameOutcome);
                                 savedGames.add(currentGame);
                                 saveGames();
 
@@ -368,7 +368,7 @@ public class PlayActivity extends AppCompatActivity {
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(PlayActivity.this);
-        builder.setMessage("Return to main menu? (Game will not be saved)").setPositiveButton("Yes", dialogListener)
+        builder.setMessage("Return to main menu?").setPositiveButton("Yes", dialogListener)
                 .setNegativeButton("No", dialogListener).show();
         return true;
     }
@@ -387,13 +387,13 @@ public class PlayActivity extends AppCompatActivity {
         winnerText.setVisibility(View.VISIBLE);
         saveButton.setVisibility(View.VISIBLE);
 
-        if(gameOutcome == 2){
+        if(gameOutcome.equals("draw")){
             checkmateText.setText(R.string.draw);
             winnerText.setText("");
             boardView.setOnItemClickListener(null);
             return;
         }
-        else if(gameOutcome == 3){
+        else if(gameOutcome.equals("resign")){
             if(whiteTurn){
                 checkmateText.setText(R.string.black_resigns);
             }

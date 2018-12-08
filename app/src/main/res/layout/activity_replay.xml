@@ -1,27 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/replay_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ReplayActivity">
+    tools:context=".PlayActivity">
 
-    <LinearLayout
+    <GridView
+        android:id="@+id/replay_board"
+        android:layout_width="360dp"
+        android:layout_height="360dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="11dp"
+        android:layout_marginBottom="138dp"
+        android:gravity="center_horizontal"
+        android:numColumns="8">
+
+    </GridView>
+
+    <TextView
+        android:id="@+id/whosMove_replay"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="60dp"
+        android:layout_marginBottom="105dp"
+        android:text="White's Move" />
 
-        <TextView
-            android:id="@+id/game_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            app:layout_constraintBottom_toBottomOf="@id/num_moves" />
+    <TextView
+        android:id="@+id/status_replay"
+        android:layout_width="78dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/whosMove_replay"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="60dp" />
 
-        <TextView
-            android:id="@+id/num_moves"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/checkmate_text_replay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/who_won_replay"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:text="Checkmate"
+        android:visibility="invisible" />
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/who_won_replay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="63dp"
+        android:text="TextView"
+        android:visibility="invisible" />
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/next_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="48dp"
+        android:text="@string/next_button" />
+
+    <Button
+        android:id="@+id/rewatch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:visibility="invisible"
+        android:text="@string/rewatch"/>
+
+</RelativeLayout>
