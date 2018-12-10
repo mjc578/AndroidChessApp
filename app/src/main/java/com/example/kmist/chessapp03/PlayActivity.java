@@ -107,6 +107,7 @@ public class PlayActivity extends AppCompatActivity {
                 }
                 savedMoves.add(result[0]);
                 savedMoves.add(result[1]);
+                checkForCheckOrMate();
                 boardView.setAdapter(new ChessBoardAdapter(PlayActivity.this, board));
                 whiteTurn = !whiteTurn;
                 whosMove.setText(R.string.black_move);
@@ -166,35 +167,7 @@ public class PlayActivity extends AppCompatActivity {
                             undoPressed = false;
                             board.maintainPawn();
                             savedMoves.add(curr);
-                            //check if the move put opponent in check or checkmate
-                            if(whiteTurn){
-                                King k = (King) board.atPosition(board.getPositionKing("black", board));
-                                if(k.isInCheck(board)){
-                                    if(k.isCheckmated(board)){
-                                        //end the game, hide all buttons
-                                        hideGameViews();
-                                        showWinViews();
-                                    }
-                                    check.setText(R.string.check);
-                                }
-                                else{
-                                    check.setText("");
-                                }
-                            }
-                            else{
-                                King k = (King) board.atPosition(board.getPositionKing("white", board));
-                                if(k.isInCheck(board)){
-                                    if(k.isCheckmated(board)){
-                                        //end the game, hide all buttons
-                                        hideGameViews();
-                                        showWinViews();
-                                    }
-                                    check.setText(R.string.check);
-                                }
-                                else{
-                                    check.setText("");
-                                }
-                            }
+                            checkForCheckOrMate();
                             whiteTurn = !whiteTurn;
                             if(!whiteTurn){
                                 whosMove.setText(R.string.black_move);
@@ -238,6 +211,7 @@ public class PlayActivity extends AppCompatActivity {
                     savedMoves.remove(savedMoves.size() - 1);
 
                     copyBoard(board, prevBoard);
+                    checkForCheckOrMate();
 
                     adapter = new ChessBoardAdapter(PlayActivity.this, board);
                     boardView.setAdapter(adapter);
@@ -472,6 +446,38 @@ public class PlayActivity extends AppCompatActivity {
                 else{
                     boardToFill.getBoard()[i][j] = null;
                 }
+            }
+        }
+    }
+
+    private void checkForCheckOrMate(){
+        //check if the move put opponent in check or checkmate
+        if(whiteTurn){
+            King k = (King) board.atPosition(board.getPositionKing("black", board));
+            if(k.isInCheck(board)){
+                if(k.isCheckmated(board)){
+                    //end the game, hide all buttons
+                    hideGameViews();
+                    showWinViews();
+                }
+                check.setText(R.string.check);
+            }
+            else{
+                check.setText("");
+            }
+        }
+        else{
+            King k = (King) board.atPosition(board.getPositionKing("white", board));
+            if(k.isInCheck(board)){
+                if(k.isCheckmated(board)){
+                    //end the game, hide all buttons
+                    hideGameViews();
+                    showWinViews();
+                }
+                check.setText(R.string.check);
+            }
+            else{
+                check.setText("");
             }
         }
     }
