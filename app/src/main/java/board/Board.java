@@ -282,7 +282,7 @@ public class Board {
 	}
 
 	public Position[] makeRandomMove(String color){
-		Position[] pp = new Position[2];
+		Position[] pp = null;
 		for(int i = 0; i < 8; i++){
 			for(int j = 0; j < 8; j++){
 				if(board[i][j] != null && board[i][j].getColor().equals(color)){
@@ -290,6 +290,7 @@ public class Board {
 						for(int n = 0; n < 8; n++){
 							Position np = new Position(Position.toChar(m + 1), n + 1);
 							if(board[i][j].move(np, this)){
+								pp = new Position[2];
 								pp[0] = new Position(Position.toChar(i + 1), j + 1);
 								pp[1] = np;
 								return pp;
@@ -301,4 +302,5 @@ public class Board {
 		}
 		return null;
 	}
+
 }

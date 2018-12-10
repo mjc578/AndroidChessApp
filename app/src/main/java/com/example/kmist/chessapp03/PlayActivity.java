@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -137,6 +138,8 @@ public class PlayActivity extends AppCompatActivity {
                     background.setImageResource(R.drawable.selected);
                     savedMoves.add(curr);
                     firstTouch = true;
+
+                    Log.e("REEEEEEEEEEEEEEEEEEE:", "" + board.atPosition(curr).getPosition().getFile() + " " + board.atPosition(curr).getPosition().getRank());
                 }
                 //selecting a second move, how spicy
                 else{
@@ -149,6 +152,8 @@ public class PlayActivity extends AppCompatActivity {
                     }
                     //they selected another space! how daring! check if they can move there
                     else{
+                        prevBoard = new Board();
+                        copyBoard(prevBoard, board);
                         //piece will only move if it can otherwise nothing happens
                         boolean s = board.getBoard()[prev.getFile()][prev.getRank()].move(curr, board);
                         //successful move, store the move and maintain the pawns
@@ -226,6 +231,8 @@ public class PlayActivity extends AppCompatActivity {
                     }
                     savedMoves.remove(savedMoves.size() - 1);
                     savedMoves.remove(savedMoves.size() - 1);
+
+                    copyBoard(board, prevBoard);
 
                     adapter = new ChessBoardAdapter(PlayActivity.this, board);
                     boardView.setAdapter(adapter);
@@ -329,7 +336,18 @@ public class PlayActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 saveGameText = input.getText().toString();
-                                if(saveGameText.equals("")){
+                                boolean exists = false;
+                                for(ArchivedGame ag : savedGames){
+                                    if(ag.getName().equals(saveGameText)){
+                                        exists = true;
+                                        break;
+                                    }
+                                }
+                                if(saveGameText.equals("") || exists){
+                                    if(exists){
+                                        Toast.makeText(PlayActivity.this, "Game Name Already Exists", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
                                     Toast.makeText(PlayActivity.this, "Enter a Game Name", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
@@ -438,5 +456,15 @@ public class PlayActivity extends AppCompatActivity {
             a = new ArrayList<>();
         }
         return a;
+    }
+
+    private void copyBoard(Board boardToFill, Board boardToCopy){
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                if(boardToCopy.getBoard()[i][j] != null){
+
+                }
+            }
+        }
     }
 }
