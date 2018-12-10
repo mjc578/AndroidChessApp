@@ -101,4 +101,18 @@ public class Rook extends Pieces{
 		firstMove = true;
 		return true;
 	}
+
+	public void setSetFM(Boolean m){
+		firstMove = m;
+	}
+
+	@Override
+	public Pieces copyPiece() {
+		char c = Position.toChar(this.getPosition().getFile() + 1);
+		int f = this.getPosition().getRank() + 1;
+		Position p = new Position(c, f);
+		Rook r = new Rook("Rook", this.getColor(), p, getResImage());
+		r.setSetFM(firstMove);
+		return r;
+	}
 }

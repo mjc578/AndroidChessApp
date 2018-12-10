@@ -75,4 +75,12 @@ public class Bishop extends Pieces{
 		this.setPosition(Position.toChar(np.getFile()), np.getRank());
 		return true;
 	}
+
+	@Override
+	public Pieces copyPiece() {
+		char c = Position.toChar(this.getPosition().getFile() + 1);
+		int f = this.getPosition().getRank() + 1;
+		Position p = new Position(c, f);
+		return new Bishop("Bishop", this.getColor(), p, getResImage());
+	}
 }

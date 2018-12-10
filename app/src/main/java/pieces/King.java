@@ -99,7 +99,21 @@ public class King extends Pieces{
 		return true;
 		
 	}
-	
+
+	@Override
+	public Pieces copyPiece() {
+		char c = Position.toChar(this.getPosition().getFile() + 1);
+		int f = this.getPosition().getRank() + 1;
+		Position p = new Position(c, f);
+		King k = new King("King", this.getColor(), p, getResImage());
+		k.setFirstMove(firstMove);
+		return k;
+	}
+
+	public void setFirstMove(boolean firstMove){
+		this.firstMove = firstMove;
+	}
+
 	/**
 	 * If player attempts castling, returns true if castling is currently valid
 	 * King cant castle if in check, spaces in between rook are in check or if 

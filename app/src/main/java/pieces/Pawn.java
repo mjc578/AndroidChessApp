@@ -321,4 +321,20 @@ public class Pawn extends Pieces{
 		board.getBoard()[this.getPosition().getFile()][this.getPosition().getRank()] = null;
 		return true;
 	}
+
+	@Override
+	public Pieces copyPiece() {
+		char c = Position.toChar(this.getPosition().getFile() + 1);
+		int f = this.getPosition().getRank() + 1;
+		Position p = new Position(c, f);
+		Pawn pp = new Pawn("pawn", this.getColor(), p, getResImage());
+		pp.setJustMovedTwo(justMovedTwo);
+		pp.setCount(count);
+		pp.setFirstMove(firstMove);
+		return pp;
+	}
+
+	public void setFirstMove(boolean bbb){
+		firstMove = bbb;
+	}
 }

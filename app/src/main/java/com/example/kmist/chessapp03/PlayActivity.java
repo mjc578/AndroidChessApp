@@ -92,8 +92,15 @@ public class PlayActivity extends AppCompatActivity {
                 if(whiteTurn){
                     color = "white";
                 }
-                //TODO an undo board should be saved here if user wants to undo random move
+
+                prevBoard = new Board();
+                copyBoard(prevBoard, board);
+                undoPressed = false;
+
                 Position[] result = board.makeRandomMove(color);
+
+                //TODO do checks on checkmate and check
+
                 if(result == null){
                     Toast.makeText(PlayActivity.this, "Cannot make a random move", Toast.LENGTH_SHORT).show();
                     return;
@@ -138,8 +145,6 @@ public class PlayActivity extends AppCompatActivity {
                     background.setImageResource(R.drawable.selected);
                     savedMoves.add(curr);
                     firstTouch = true;
-
-                    Log.e("REEEEEEEEEEEEEEEEEEE:", "" + board.atPosition(curr).getPosition().getFile() + " " + board.atPosition(curr).getPosition().getRank());
                 }
                 //selecting a second move, how spicy
                 else{
@@ -462,7 +467,10 @@ public class PlayActivity extends AppCompatActivity {
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
                 if(boardToCopy.getBoard()[i][j] != null){
-
+                    boardToFill.getBoard()[i][j] = boardToCopy.getBoard()[i][j].copyPiece();
+                }
+                else{
+                    boardToFill.getBoard()[i][j] = null;
                 }
             }
         }
