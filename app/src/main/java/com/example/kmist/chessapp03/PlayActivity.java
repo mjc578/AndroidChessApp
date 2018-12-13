@@ -99,8 +99,6 @@ public class PlayActivity extends AppCompatActivity {
 
                 Position[] result = board.makeRandomMove(color);
 
-                //TODO do checks on checkmate and check
-
                 if(result == null){
                     Toast.makeText(PlayActivity.this, "Cannot make a random move", Toast.LENGTH_SHORT).show();
                     return;

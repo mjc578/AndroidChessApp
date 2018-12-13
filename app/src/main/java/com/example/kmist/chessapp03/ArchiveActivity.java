@@ -78,18 +78,20 @@ public class ArchiveActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if(archivedGames == null || archivedGames.isEmpty()){
-            return false;
-        }
-
+        
         switch (id) {
             case R.id.sort_by_name:
+                if(archivedGames == null || archivedGames.isEmpty()){
+                    return false;
+                }
                 Collections.sort(archivedGames, new CompareByName());
                 archiveList.setAdapter(archiveAdapter);
                 return true;
 
             case R.id.sort_by_date:
+                if(archivedGames == null || archivedGames.isEmpty()){
+                    return false;
+                }
                 Collections.sort(archivedGames, new CompareByDate());
                 archiveList.setAdapter(archiveAdapter);
                 return true;
